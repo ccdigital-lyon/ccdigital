@@ -1,27 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useTheme } from "./ThemeProvider";
 
 const solutions = [
   {
     title: "RSSI Stratégique",
     href: "/solutions/rssi-strategique",
+    icon: "🛡️",
     desc: "Direction cyber externalisée pour PME",
   },
   {
     title: "Protection IT Exposés",
     href: "/solutions/protection-it",
+    icon: "🔒",
     desc: "EASM, WAF & surveillance continue",
   },
   {
     title: "Formation Dirigeant",
     href: "/solutions/formation-dirigeant",
+    icon: "🎓",
     desc: "Gouvernance NIS2 & sensibilisation CODIR",
   },
   {
     title: "Sensibilisation Employés",
     href: "/solutions/sensibilisation",
+    icon: "👥",
     desc: "Plateforme de simulation & formation",
   },
 ];
@@ -29,50 +34,130 @@ const solutions = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { theme, toggleTheme } = useTheme();
+  const isLight = theme === "light";
+
+  // Close mobile menu on route change (via scroll / click outside)
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setSolutionsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Stable hover: delay closing so user can move cursor to submenu
+  const handleMouseEnter = () => {
+    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+    setSolutionsOpen(true);
+  };
+  const handleMouseLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => setSolutionsOpen(false), 250);
+  };
+
+  const navLinkClass = `transition-colors ${
+    isLight
+      ? "text-gray-600 hover:text-[#0A1628]"
+      : "text-[#B0B8C8] hover:text-white"
+  }`;
+
+  const borderClass = isLight ? "border-gray-200" : "border-white/10";
+  const bgGlass = isLight
+    ? "bg-white/90 backdrop-blur-lg border-b border-gray-200"
+    : "bg-[#0A1628]/90 backdrop-blur-lg border-b border-white/10";
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A1628]/90 backdrop-blur-lg border-b border-white/10">
+    <header className={`fixed top-0 left-0 right-0 z-50 ${bgGlass}`}>
       <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl font-bold tracking-tight">
-            <span className="text-white">CC</span>
+            <span className={isLight ? "text-[#0A1628]" : "text-white"}>CC</span>
             <span className="gradient-text">DIGITAL</span>
           </span>
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          <div className="relative" onMouseEnter={() => setSolutionsOpen(true)} onMouseLeave={() => setSolutionsOpen(false)}>
-            <button className="text-[#B0B8C8] hover:text-white transition-colors flex items-center gap-1">
-              Solutions <span className="text-xs">▾</span>
+          <div
+            ref={dropdownRef}
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <button
+              className={`${navLinkClass} flex items-center gap-1 ${solutionsOpen ? (isLight ? "text-[#0A1628]" : "text-white") : ""}`}
+              onClick={() => setSolutionsOpen(!solutionsOpen)}
+              aria-expanded={solutionsOpen}
+              aria-haspopup="true"
+            >
+              Solutions <span className={`text-xs transition-transform ${solutionsOpen ? "rotate-180" : ""}`}>▾</span>
             </button>
             {solutionsOpen && (
-              <div className="absolute top-full left-0 mt-2 w-72 bg-[#1A2744] border border-white/10 rounded-xl shadow-2xl p-2">
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-80 rounded-xl shadow-2xl shadow-black/40 p-2 animate-fade-in ${
+                isLight
+                  ? "bg-white border border-gray-200 shadow-lg"
+                  : "bg-[#1A2744] border border-white/10"
+              }`}>
+                <div className={`absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 ${
+                  isLight ? "bg-white border-l border-t border-gray-200" : "bg-[#1A2744] border-l border-t border-white/10"
+                }`} />
                 {solutions.map((s) => (
                   <Link
                     key={s.href}
                     href={s.href}
-                    className="block p-3 rounded-lg hover:bg-white/5 transition-colors"
+                    className={`flex items-start gap-3 p-3 rounded-lg transition-colors group ${
+                      isLight ? "hover:bg-gray-50" : "hover:bg-white/5"
+                    }`}
+                    onClick={() => setSolutionsOpen(false)}
                   >
-                    <span className="font-medium text-white">{s.title}</span>
-                    <span className="block text-xs text-[#6B7A90]">{s.desc}</span>
+                    <span className="text-2xl mt-0.5">{s.icon}</span>
+                    <div>
+                      <span className={`font-medium block group-hover:text-[#00D4FF] transition-colors ${
+                        isLight ? "text-[#0A1628]" : "text-white"
+                      }`}>
+                        {s.title}
+                      </span>
+                      <span className={`block text-xs mt-0.5 ${
+                        isLight ? "text-gray-500" : "text-[#6B7A90]"
+                      }`}>
+                        {s.desc}
+                      </span>
+                    </div>
                   </Link>
                 ))}
               </div>
             )}
           </div>
-          <Link href="/blog" className="text-[#B0B8C8] hover:text-white transition-colors">
-            Ressources
-          </Link>
-          <Link href="/about" className="text-[#B0B8C8] hover:text-white transition-colors">
-            Qui sommes-nous ?
-          </Link>
-          <Link href="/contact" className="text-[#B0B8C8] hover:text-white transition-colors">
-            Contact
-          </Link>
+          <Link href="/blog" className={navLinkClass}>Ressources</Link>
+          <Link href="/about" className={navLinkClass}>Qui sommes-nous ?</Link>
+          <Link href="/contact" className={navLinkClass}>Contact</Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-lg transition-all ${
+              isLight
+                ? "border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-[#0A1628]"
+                : "border border-white/10 text-[#B0B8C8] hover:bg-white/5 hover:text-white"
+            }`}
+            aria-label={isLight ? "Passer en mode sombre" : "Passer en mode clair"}
+            title={isLight ? "Mode sombre" : "Mode clair"}
+          >
+            {isLight ? (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            )}
+          </button>
           <Link
             href="/contact"
             className="px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628] hover:shadow-lg hover:shadow-[#00D4FF]/25 transition-all"
@@ -81,45 +166,84 @@ export function Header() {
           </Link>
           <Link
             href="/login"
-            className="px-5 py-2 text-sm font-semibold rounded-lg border border-white/20 text-white hover:bg-white/5 transition-all"
+            className={`px-5 py-2 text-sm font-semibold rounded-lg transition-all ${
+              isLight
+                ? "border border-gray-300 text-[#0A1628] hover:bg-gray-50"
+                : "border border-white/20 text-white hover:bg-white/5"
+            }`}
           >
             Se connecter
           </Link>
         </div>
 
-        {/* Mobile burger */}
-        <button
-          className="md:hidden text-white p-2"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Menu"
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {menuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        {/* Mobile */}
+        <div className="flex md:hidden items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-lg transition-all ${
+              isLight
+                ? "border border-gray-300 text-gray-600"
+                : "border border-white/10 text-white"
+            }`}
+            aria-label={isLight ? "Mode sombre" : "Mode clair"}
+          >
+            {isLight ? (
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
             )}
-          </svg>
-        </button>
+          </button>
+          <button
+            className={`${isLight ? "text-[#0A1628]" : "text-white"} p-2`}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {menuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#0A1628] border-t border-white/10 px-6 py-4 space-y-4">
-          {solutions.map((s) => (
-            <Link
-              key={s.href}
-              href={s.href}
-              className="block text-[#B0B8C8] hover:text-white"
-              onClick={() => setMenuOpen(false)}
-            >
-              {s.title}
-            </Link>
-          ))}
-          <Link href="/blog" className="block text-[#B0B8C8] hover:text-white" onClick={() => setMenuOpen(false)}>Ressources</Link>
-          <Link href="/about" className="block text-[#B0B8C8] hover:text-white" onClick={() => setMenuOpen(false)}>Qui sommes-nous ?</Link>
-          <Link href="/contact" className="block text-[#B0B8C8] hover:text-white" onClick={() => setMenuOpen(false)}>Contact</Link>
-          <hr className="border-white/10" />
+        <div className={`md:hidden border-t px-6 py-4 space-y-1 animate-fade-in ${
+          isLight ? "bg-white border-gray-200" : "bg-[#0A1628] border-white/10"
+        }`}>
+          <button
+            className={`flex items-center justify-between w-full py-2 ${navLinkClass}`}
+            onClick={() => setSolutionsOpen(!solutionsOpen)}
+          >
+            Solutions
+            <span className={`text-xs transition-transform ${solutionsOpen ? "rotate-180" : ""}`}>▾</span>
+          </button>
+          {solutionsOpen && (
+            <div className={`pl-4 space-y-1 animate-fade-in`}>
+              {solutions.map((s) => (
+                <Link
+                  key={s.href}
+                  href={s.href}
+                  className={`flex items-center gap-2 py-2 ${navLinkClass}`}
+                  onClick={() => { setMenuOpen(false); setSolutionsOpen(false); }}
+                >
+                  <span>{s.icon}</span>
+                  {s.title}
+                </Link>
+              ))}
+            </div>
+          )}
+          <Link href="/blog" className={`block py-2 ${navLinkClass}`} onClick={() => setMenuOpen(false)}>Ressources</Link>
+          <Link href="/about" className={`block py-2 ${navLinkClass}`} onClick={() => setMenuOpen(false)}>Qui sommes-nous ?</Link>
+          <Link href="/contact" className={`block py-2 ${navLinkClass}`} onClick={() => setMenuOpen(false)}>Contact</Link>
+          <hr className={isLight ? "border-gray-200" : "border-white/10"} />
           <Link
             href="/contact"
             className="block px-5 py-2 text-center font-semibold rounded-lg bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628]"
@@ -129,7 +253,9 @@ export function Header() {
           </Link>
           <Link
             href="/login"
-            className="block px-5 py-2 text-center font-semibold rounded-lg border border-white/20 text-white"
+            className={`block px-5 py-2 text-center font-semibold rounded-lg ${
+              isLight ? "border border-gray-300 text-[#0A1628]" : "border border-white/20 text-white"
+            }`}
             onClick={() => setMenuOpen(false)}
           >
             Se connecter

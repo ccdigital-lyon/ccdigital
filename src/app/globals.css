@@ -12,6 +12,28 @@
   --cc-gray-dark: #6B7A90;
 }
 
+/* Theme: Dark (default) */
+.theme-dark {
+  --bg-primary: #0A1628;
+  --bg-secondary: #0D1F3C;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --border-card: rgba(255, 255, 255, 0.1);
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B8C8;
+  --text-muted: #6B7A90;
+}
+
+/* Theme: Light */
+.theme-light {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --bg-card: rgba(0, 0, 0, 0.03);
+  --border-card: rgba(0, 0, 0, 0.08);
+  --text-primary: #0A1628;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -21,24 +43,28 @@ html {
 }
 
 body {
-  background-color: var(--cc-blue);
-  color: var(--cc-white);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Slider animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
+/* Light theme overrides */
+.theme-light body {
+  background-color: #F8FAFC;
+  color: #0A1628;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
+.theme-light .gradient-text {
+  background: linear-gradient(135deg, #0099CC, #00E68A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--cc-cyan), var(--cc-green));
+/* Dark theme gradient-text (default) */
+.theme-dark .gradient-text {
+  background: linear-gradient(135deg, #00D4FF, #00E68A);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -53,12 +79,21 @@ body {
   box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
 }
 
+.theme-light .card-hover:hover {
+  box-shadow: 0 12px 40px rgba(0, 153, 204, 0.12);
+}
+
+/* Light theme card overrides */
+.theme-light section {
+  transition: background-color 0.3s ease;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--cc-blue);
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--cc-blue-mid);
@@ -66,4 +101,41 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--cc-cyan-dark);
+}
+
+/* Slider animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Prose overrides for light theme */
+.theme-light .prose-invert {
+  --tw-prose-body: #475569;
+  --tw-prose-headings: #0A1628;
+  --tw-prose-links: #0099CC;
+}
+
+/* Chat bubble animation */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Chat pulse animation */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-dot {
+  animation: pulse 1.5s ease-in-out infinite;
 }
