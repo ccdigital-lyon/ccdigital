@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useTheme } from "./ThemeProvider";
 
 const slides = [
   {
@@ -39,6 +40,8 @@ export function HeroSlider() {
 
   const goTo = useCallback((i: number) => setCurrent(i), []);
   const next = useCallback(() => setCurrent((p) => (p + 1) % slides.length), []);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   useEffect(() => {
     const timer = setInterval(next, AUTOPLAY_MS);
@@ -88,7 +91,11 @@ export function HeroSlider() {
           {slide.features.map((f) => (
             <div
               key={f.title}
-              className="card-hover p-5 rounded-xl bg-surface-card backdrop-blur border border-edge"
+              className={`card-hover p-5 rounded-xl border backdrop-blur ${
+                isLight
+                  ? "bg-white/90 border-gray-200 shadow-sm"
+                  : "bg-surface-card border-edge"
+              }`}
             >
               <div className="flex items-start gap-4">
                 <span className="text-2xl">{f.icon}</span>
