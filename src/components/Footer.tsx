@@ -31,10 +31,19 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <Link href="/" className="text-2xl font-bold tracking-tight">
+          <div className="flex items-center gap-2">
+            <img
+              src="/assets/logo-big-blue.png"
+              alt="CCDigital"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
+            <span className="text-2xl font-bold tracking-tight">
               <span className="footer-heading">CC</span>
               <span className="gradient-text">DIGITAL</span>
-            </Link>
+            </span>
+          </div>
             <p className="mt-4 text-sm footer-text-muted leading-relaxed">
               Cybersécurité IT & OT pour PME industrielle.
               Anticipation, gouvernance et conformité NIS2.

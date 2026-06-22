@@ -36,6 +36,10 @@ export default function AboutPage() {
               </div>
             </div>
 
+            <div className="mt-12 rounded-2xl overflow-hidden bg-surface-card border border-edge">
+              <img src="/assets/about-team.png" alt="L'équipe CCDigital" className="w-full h-auto" />
+            </div>
+
             <h2 className="text-2xl font-bold text-content mt-12 mb-4">Notre approche</h2>
             <p>
               Nous croyons que la cybersécurité doit être un sujet de direction, pas uniquement technique. Notre méthodologie en 5 piliers — Mesurer, Décider, Simuler, Agir, Vérifier — permet de transformer la conformité en avantage compétitif.

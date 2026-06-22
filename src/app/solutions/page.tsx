@@ -18,7 +18,7 @@ const solutions: Solution[] = [
   {
     slug: "rssi-strategique",
     title: "RSSI Stratégique",
-    icon: "🛡️",
+    icon: "/assets/icon-rssi.png",
     desc: "Direction cybersécurité externalisée pour PME qui n'ont pas les ressources pour un RSSI interne. Pilotage, gouvernance et conformité NIS2.",
     features: [
       "Pilotage de la politique de sécurité",
@@ -31,7 +31,7 @@ const solutions: Solution[] = [
   {
     slug: "protection-it",
     title: "Protection IT Exposés",
-    icon: "🔒",
+    icon: "/assets/icon-protection-it.png",
     desc: "EASM (External Attack Surface Management), WAF et surveillance continue de votre surface d'attaque exposée.",
     features: [
       "Cartographie de la surface d'attaque",
@@ -44,7 +44,7 @@ const solutions: Solution[] = [
   {
     slug: "formation-dirigeant",
     title: "Formation Dirigeant",
-    icon: "🎓",
+    icon: "/assets/icon-formation.png",
     desc: "Programme de gouvernance NIS2 et sensibilisation cyber pour les dirigeants et membres du CODIR.",
     features: [
       "Formation NIS2 pour décideurs",
@@ -57,7 +57,7 @@ const solutions: Solution[] = [
   {
     slug: "sensibilisation",
     title: "Sensibilisation Employés",
-    icon: "👥",
+    icon: "/assets/icon-sensibilisation.png",
     desc: "Plateforme de simulation et formation continue pour transformer chaque collaborateur en rempart contre le risque cyber.",
     features: [
       "Phishing simulations ciblées",
@@ -85,8 +85,8 @@ export default function SolutionsPage() {
             {solutions.map((sol) => (
               <div key={sol.slug} className="grid md:grid-cols-2 gap-10 items-start">
                 <div>
-                  <span className="text-4xl">{sol.icon}</span>
-                  <h2 className="text-2xl md:text-3xl font-bold mt-4 mb-4 text-content">{sol.title}</h2>
+                  <img src={sol.icon} alt={sol.title} className="w-16 h-16 mb-4" />
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-content">{sol.title}</h2>
                   <p className="text-content-secondary leading-relaxed mb-6">{sol.desc}</p>
                   <Link
                     href="/contact"

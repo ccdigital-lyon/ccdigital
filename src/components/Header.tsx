@@ -16,25 +16,25 @@ const solutions: SolutionLink[] = [
   {
     title: "RSSI Stratégique",
     href: "/solutions/rssi-strategique",
-    icon: "🛡️",
+    icon: "/assets/icon-rssi.png",
     desc: "Direction cyber externalisée pour PME",
   },
   {
     title: "Protection IT Exposés",
     href: "/solutions/protection-it",
-    icon: "🔒",
+    icon: "/assets/icon-protection-it.png",
     desc: "EASM, WAF & surveillance continue",
   },
   {
     title: "Formation Dirigeant",
     href: "/solutions/formation-dirigeant",
-    icon: "🎓",
+    icon: "/assets/icon-formation.png",
     desc: "Gouvernance NIS2 & sensibilisation CODIR",
   },
   {
     title: "Sensibilisation Employés",
     href: "/solutions/sensibilisation",
-    icon: "👥",
+    icon: "/assets/icon-sensibilisation.png",
     desc: "Plateforme de simulation & formation",
   },
 ];
@@ -84,6 +84,13 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-40 glass-header backdrop-blur-lg">
       <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
+          <img
+            src="/assets/logo-big-blue.png"
+            alt="CCDigital"
+            width={32}
+            height={32}
+            className="rounded-lg"
+          />
           <span className="text-2xl font-bold tracking-tight">
             <span className="text-content">CC</span>
             <span className="gradient-text">DIGITAL</span>
@@ -124,7 +131,7 @@ export function Header() {
                     }`}
                     onClick={() => setSolutionsOpen(false)}
                   >
-                    <span className="text-2xl mt-0.5">{s.icon}</span>
+                    <img src={s.icon} alt="" className="w-8 h-8 mt-0.5" />
                     <div>
                       <span className={`font-medium block group-hover:text-accent transition-colors text-content`}>
                         {s.title}
@@ -240,7 +247,7 @@ export function Header() {
                   className={`flex items-center gap-2 py-2 ${navLinkClass}`}
                   onClick={() => { setMenuOpen(false); setSolutionsOpen(false); }}
                 >
-                  <span>{s.icon}</span>
+                  <img src={s.icon} alt="" className="w-6 h-6" />
                   {s.title}
                 </Link>
               ))}

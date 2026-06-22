@@ -17,7 +17,13 @@ export default function ContactPage() {
             Identifiez vos vrais risques et construisez une trajectoire cybersécurité claire et pilotable.
           </p>
 
-          <form className="space-y-6" action="https://formspree.io/f/placeholder" method="POST">
+          <div className="grid md:grid-cols-[1fr_2fr] gap-12 items-start">
+            <div className="hidden md:block">
+              <div className="rounded-2xl overflow-hidden bg-surface-card border border-edge">
+                <img src="/assets/contact-illustration.png" alt="Consultation CCDigital" className="w-full h-auto" />
+              </div>
+            </div>
+            <form className="space-y-6" action="https://formspree.io/f/placeholder" method="POST">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-content-secondary mb-2">Nom complet</label>
@@ -80,6 +86,7 @@ export default function ContactPage() {
               Envoyer la demande
             </button>
           </form>
+          </div>
         </div>
       </section>
     </div>
