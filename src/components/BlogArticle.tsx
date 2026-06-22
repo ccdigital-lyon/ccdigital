@@ -17,20 +17,10 @@ export function BlogArticle({ slug, initialPost }: BlogArticleProps) {
   useEffect(() => {
     if (initialPost) return;
 
-    const ghostUrl = process.env.NEXT_PUBLIC_GHOST_URL || process.env.NEXT_PUBLIC_GHOST_API_URL || "https://la-cyber-en-clair.ccdigital.fr";
-    const ghostKey = process.env.NEXT_PUBLIC_GHOST_CONTENT_API_KEY || "";
-
-    if (!ghostKey) {
-      setLoading(false);
-      setNotFound(true);
-      return;
-    }
-
+    // Fetch via Next.js API route (server-side proxy to Ghost — avoids CORS)
     let cancelled = false;
 
-    fetch(
-      `${ghostUrl}/ghost/api/content/posts/slug/${slug}/?key=${ghostKey}&include=tags,authors&formats=html`
-    )
+    fetch(`/api/blog/${slug}`)
       .then((res) => {
         if (res.status === 404) throw new Error("NOT_FOUND");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);

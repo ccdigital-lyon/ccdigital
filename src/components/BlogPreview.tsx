@@ -15,19 +15,10 @@ export function BlogPreview({ posts: initialPosts }: BlogPreviewProps) {
   useEffect(() => {
     if (initialPosts.length > 0) return;
 
-    const ghostUrl = process.env.NEXT_PUBLIC_GHOST_URL || process.env.NEXT_PUBLIC_GHOST_API_URL || "https://la-cyber-en-clair.ccdigital.fr";
-    const ghostKey = process.env.NEXT_PUBLIC_GHOST_CONTENT_API_KEY || "";
-
-    if (!ghostKey) {
-      setLoading(false);
-      return;
-    }
-
+    // Fetch via Next.js API route (server-side proxy to Ghost — avoids CORS)
     let cancelled = false;
 
-    fetch(
-      `${ghostUrl}/ghost/api/content/posts/?key=${ghostKey}&limit=3&include=tags,authors&formats=html`
-    )
+    fetch(`/api/blog?limit=3`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
