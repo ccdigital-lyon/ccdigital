@@ -54,16 +54,17 @@ export function Header() {
     setSolutionsOpen(false);
   }, [pathname]);
 
-  // Close dropdown on click outside
+  // Close dropdown on click outside (desktop only — mobile uses its own toggle)
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      if (menuOpen) return; // mobile menu handles its own state
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setSolutionsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [menuOpen]);
 
   // Stable hover: delay closing so user can move cursor to submenu
   const handleMouseEnter = () => {
