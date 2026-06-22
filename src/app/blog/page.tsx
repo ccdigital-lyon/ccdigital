@@ -14,12 +14,12 @@ export default async function BlogPage() {
 
   return (
     <div className="pt-20">
-      <section className="py-20 bg-gradient-to-b from-[#0A1628] to-[#0D1F3C]">
+      <section className="py-20 gradient-page">
         <div className="container mx-auto px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-content">
             Ressources <span className="gradient-text">& Blog</span>
           </h1>
-          <p className="text-lg text-[#B0B8C8] max-w-2xl mb-12">
+          <p className="text-lg text-content-secondary max-w-2xl mb-12">
             Analyses, guides et retours d&apos;expérience pour anticiper les menaces cyber en PME industrielle.
           </p>
 
@@ -29,7 +29,7 @@ export default async function BlogPage() {
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="card-hover group block rounded-2xl overflow-hidden bg-white/5 border border-white/10"
+                  className="card-hover group block rounded-2xl overflow-hidden bg-surface-card border border-edge"
                 >
                   {post.feature_image && (
                     <div className="aspect-video overflow-hidden">
@@ -42,14 +42,14 @@ export default async function BlogPage() {
                   )}
                   <div className="p-6">
                     {post.primary_tag && (
-                      <span className="text-xs font-semibold text-[#00D4FF] uppercase tracking-wider">
+                      <span className="text-xs font-semibold text-accent uppercase tracking-wider">
                         {post.primary_tag.name}
                       </span>
                     )}
-                    <h2 className="text-lg font-bold mt-2 mb-3 group-hover:text-[#00D4FF] transition-colors line-clamp-2">
+                    <h2 className="text-lg font-bold mt-2 mb-3 group-hover:text-accent transition-colors line-clamp-2 text-content">
                       {post.title}
                     </h2>
-                    <p className="text-sm text-[#B0B8C8] line-clamp-3">
+                    <p className="text-sm text-content-secondary line-clamp-3">
                       {post.excerpt || ""}
                     </p>
                   </div>
@@ -57,7 +57,7 @@ export default async function BlogPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 text-[#6B7A90]">
+            <div className="text-center py-20 text-content-muted">
               <p className="text-xl">Les articles arrivent bientôt…</p>
               <p className="mt-2 text-sm">Notre blog Ghost CMS sera connecté prochainement.</p>
             </div>

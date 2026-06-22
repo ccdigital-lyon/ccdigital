@@ -9,7 +9,12 @@ interface Message {
   text: string;
 }
 
-const quickActions = [
+interface QuickAction {
+  label: string;
+  reply: string;
+}
+
+const quickActions: QuickAction[] = [
   { label: "🛡️ RSSI Stratégique", reply: "Je suis intéressé par le RSSI Stratégique" },
   { label: "🔒 Protection IT", reply: "Je veux en savoir plus sur la Protection IT" },
   { label: "🎓 Formation NIS2", reply: "Je cherche une formation NIS2 pour dirigeants" },
@@ -72,12 +77,13 @@ export function ChatBot() {
     sendMessage(input);
   };
 
-  const bgMain = isLight ? "bg-white" : "bg-[#0A1628]";
-  const bgSecondary = isLight ? "bg-gray-50" : "bg-[#0D1F3C]";
-  const bgCard = isLight ? "bg-gray-100" : "bg-white/5";
-  const textPrimary = isLight ? "text-[#0A1628]" : "text-white";
-  const textSecondary = isLight ? "text-gray-600" : "text-[#B0B8C8]";
-  const borderColor = isLight ? "border-gray-200" : "border-white/10";
+  const bgMain = isLight ? "bg-white" : "bg-surface";
+  const bgSecondary = isLight ? "bg-gray-50" : "bg-surface-alt";
+  const bgCard = isLight ? "bg-gray-100" : "bg-surface-card";
+  const textPrimary = isLight ? "text-content" : "text-content";
+  const textSecondary = isLight ? "text-gray-600" : "text-content-secondary";
+  const borderColor = isLight ? "border-gray-200" : "border-edge";
+  const placeholderClass = isLight ? "placeholder-gray-400" : "placeholder-[#6B7A90]";
 
   return (
     <>
@@ -85,7 +91,7 @@ export function ChatBot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628] shadow-lg shadow-[#00D4FF]/25 hover:shadow-xl hover:shadow-[#00D4FF]/30 transition-all hover:scale-105 flex items-center justify-center"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-accent to-accent-dark text-[#0A1628] shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all hover:scale-105 flex items-center justify-center"
           aria-label="Ouvrir le chat"
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -98,7 +104,7 @@ export function ChatBot() {
       {isOpen && (
         <div className={`fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-6rem)] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-slide-up ${bgMain} ${borderColor} border`}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628]">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-accent to-accent-dark text-[#0A1628]">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[#0A1628]/20 flex items-center justify-center text-sm font-bold">CC</div>
               <div>
@@ -124,7 +130,7 @@ export function ChatBot() {
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-line ${
                     msg.role === "user"
-                      ? "bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628] rounded-br-sm"
+                      ? "bg-gradient-to-r from-accent to-accent-dark text-[#0A1628] rounded-br-sm"
                       : `${bgCard} ${textPrimary} border ${borderColor} rounded-bl-sm`
                   }`}
                 >
@@ -135,9 +141,9 @@ export function ChatBot() {
             {isTyping && (
               <div className="flex justify-start">
                 <div className={`${bgCard} ${borderColor} border rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1`}>
-                  <span className="w-2 h-2 rounded-full bg-[#00D4FF] animate-pulse-dot" style={{ animationDelay: "0ms" }} />
-                  <span className="w-2 h-2 rounded-full bg-[#00D4FF] animate-pulse-dot" style={{ animationDelay: "300ms" }} />
-                  <span className="w-2 h-2 rounded-full bg-[#00D4FF] animate-pulse-dot" style={{ animationDelay: "600ms" }} />
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse-dot" style={{ animationDelay: "0ms" }} />
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse-dot" style={{ animationDelay: "300ms" }} />
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse-dot" style={{ animationDelay: "600ms" }} />
                 </div>
               </div>
             )}
@@ -151,7 +157,7 @@ export function ChatBot() {
                 <button
                   key={action.label}
                   onClick={() => sendMessage(action.reply)}
-                  className={`text-xs px-3 py-1.5 rounded-full border ${borderColor} ${textSecondary} hover:bg-[#00D4FF]/10 hover:text-[#00D4FF] hover:border-[#00D4FF]/30 transition-all`}
+                  className={`text-xs px-3 py-1.5 rounded-full border ${borderColor} ${textSecondary} hover:bg-accent/10 hover:text-accent hover:border-accent/30 transition-all`}
                 >
                   {action.label}
                 </button>
@@ -166,13 +172,13 @@ export function ChatBot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Votre message…"
-              className={`flex-1 px-4 py-2 rounded-xl text-sm ${bgCard} ${textPrimary} border ${borderColor} focus:border-[#00D4FF] focus:outline-none transition-colors placeholder:${isLight ? "placeholder-gray-400" : "placeholder-[#6B7A90]"}`}
+              className={`flex-1 px-4 py-2 rounded-xl text-sm ${bgCard} ${textPrimary} border ${borderColor} focus:border-accent focus:outline-none transition-colors ${placeholderClass}`}
               disabled={isTyping}
             />
             <button
               type="submit"
               disabled={!input.trim() || isTyping}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628] text-sm font-semibold hover:shadow-lg hover:shadow-[#00D4FF]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-accent to-accent-dark text-[#0A1628] text-sm font-semibold hover:shadow-lg hover:shadow-accent/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Envoyer
             </button>

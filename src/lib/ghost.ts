@@ -11,6 +11,20 @@ const api = ghostKey
     })
   : null;
 
+export interface GhostTag {
+  id: string;
+  name: string;
+  slug: string;
+  count?: { posts: number };
+}
+
+export interface GhostAuthor {
+  id: string;
+  name: string;
+  slug: string;
+  profile_image: string;
+}
+
 export interface GhostPost {
   id: string;
   title: string;
@@ -19,9 +33,9 @@ export interface GhostPost {
   feature_image: string | null;
   published_at: string;
   html: string;
-  tags?: { id: string; name: string; slug: string }[];
-  primary_tag?: { id: string; name: string; slug: string };
-  primary_author?: { id: string; name: string; slug: string; profile_image: string };
+  tags?: GhostTag[];
+  primary_tag?: GhostTag;
+  primary_author?: GhostAuthor;
 }
 
 export interface GhostPage {
@@ -45,7 +59,7 @@ export async function getPosts(limit = 3): Promise<GhostPost[]> {
       limit,
       include: ['tags', 'authors'],
       formats: ['html'],
-    }) as GhostPost[];
+    });
     return Array.isArray(posts) ? posts : [];
   } catch (err) {
     console.error('Ghost API getPosts error:', err);
@@ -60,7 +74,7 @@ export async function getAllPosts(): Promise<GhostPost[]> {
       limit: 999,
       include: ['tags', 'authors'],
       formats: ['html'],
-    }) as GhostPost[];
+    });
     return Array.isArray(posts) ? posts : [];
   } catch (err) {
     console.error('Ghost API getAllPosts error:', err);
@@ -74,7 +88,7 @@ export async function getPostBySlug(slug: string): Promise<GhostPost | null> {
     const post = await api.posts.read(
       { slug },
       { include: ['tags', 'authors'], formats: ['html'] }
-    ) as GhostPost;
+    );
     return post || null;
   } catch (err) {
     console.error('Ghost API getPostBySlug error:', err);
@@ -87,7 +101,7 @@ export async function getPages(): Promise<GhostPage[]> {
   try {
     const pages = await api.pages.browse({
       formats: ['html'],
-    }) as GhostPage[];
+    });
     return Array.isArray(pages) ? pages : [];
   } catch (err) {
     console.error('Ghost API getPages error:', err);
@@ -103,7 +117,7 @@ export async function getPostsByTag(tagSlug: string, limit = 10): Promise<GhostP
       include: ['tags', 'authors'],
       formats: ['html'],
       filter: `tag:${tagSlug}`,
-    }) as GhostPost[];
+    });
     return Array.isArray(posts) ? posts : [];
   } catch (err) {
     console.error('Ghost API getPostsByTag error:', err);
@@ -111,14 +125,15 @@ export async function getPostsByTag(tagSlug: string, limit = 10): Promise<GhostP
   }
 }
 
-export async function getTags(): Promise<{ id: string; name: string; slug: string; count: { posts: number } }[]> {
+export async function getTags(): Promise<GhostTag[]> {
   if (!api) return [];
   try {
     const tags = await api.tags.browse({
       limit: 999,
       include: ['count.posts'],
-    }) as any[];
-    return Array.isArray(tags) ? tags.filter((t: any) => t.count?.posts > 0) : [];
+    });
+    if (!Array.isArray(tags)) return [];
+    return tags.filter((t) => (t.count?.posts ?? 0) > 0);
   } catch (err) {
     console.error('Ghost API getTags error:', err);
     return [];

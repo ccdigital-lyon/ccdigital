@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   Tailwind v4: semantic color tokens via @theme inline
+   References CSS variables that switch at runtime
+   ───────────────────────────────────────────── */
+@theme inline {
+  --color-surface: var(--bg-primary);
+  --color-surface-alt: var(--bg-secondary);
+  --color-surface-raised: var(--bg-tertiary);
+  --color-surface-card: var(--bg-card);
+  --color-surface-footer: var(--bg-footer);
+  --color-content: var(--text-primary);
+  --color-content-secondary: var(--text-secondary);
+  --color-content-muted: var(--text-muted);
+  --color-accent: var(--accent-cyan);
+  --color-accent-dark: var(--accent-cyan-dark);
+  --color-accent-green: var(--accent-green);
+  --color-edge: var(--border-card);
+  --color-edge-subtle: var(--border-subtle);
+}
+
+/* ── Brand constants ── */
 :root {
   --cc-blue: #0A1628;
   --cc-blue-light: #1A2744;
@@ -12,26 +33,68 @@
   --cc-gray-dark: #6B7A90;
 }
 
-/* Theme: Dark (default) */
+/* ── Theme: Dark (default) ── */
 .theme-dark {
   --bg-primary: #0A1628;
   --bg-secondary: #0D1F3C;
+  --bg-tertiary: #1A2744;
+  --bg-footer: #070E1A;
   --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-card-hover: rgba(255, 255, 255, 0.08);
   --border-card: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.06);
   --text-primary: #FFFFFF;
   --text-secondary: #B0B8C8;
   --text-muted: #6B7A90;
+  --accent-cyan: #00D4FF;
+  --accent-cyan-dark: #0099CC;
+  --accent-green: #00E68A;
+  --accent-orange: #FF6B35;
+  --accent-purple: #A78BFA;
+  --gradient-text-from: #00D4FF;
+  --gradient-text-to: #00E68A;
+  --gradient-hero-from: #0A1628;
+  --gradient-hero-via: #1A2744;
+  --gradient-hero-to: #0D1F3C;
+  --gradient-cta-from: #0A1628;
+  --gradient-cta-to: #1A2744;
+  --gradient-page-from: #0A1628;
+  --gradient-page-to: #0D1F3C;
+  --shadow-card-hover: 0 12px 40px rgba(0, 212, 255, 0.15);
+  --glass-bg: rgba(10, 22, 40, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-/* Theme: Light */
+/* ── Theme: Light ── */
 .theme-light {
   --bg-primary: #F8FAFC;
   --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F1F5F9;
+  --bg-footer: #0F172A;
   --bg-card: rgba(0, 0, 0, 0.03);
+  --bg-card-hover: rgba(0, 0, 0, 0.05);
   --border-card: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.06);
   --text-primary: #0A1628;
   --text-secondary: #475569;
   --text-muted: #94A3B8;
+  --accent-cyan: #0099CC;
+  --accent-cyan-dark: #007A99;
+  --accent-green: #00B368;
+  --accent-orange: #E64A19;
+  --accent-purple: #7C3AED;
+  --gradient-text-from: #0099CC;
+  --gradient-text-to: #00E68A;
+  --gradient-hero-from: #F8FAFC;
+  --gradient-hero-via: #E2E8F0;
+  --gradient-hero-to: #F1F5F9;
+  --gradient-cta-from: #F1F5F9;
+  --gradient-cta-to: #E2E8F0;
+  --gradient-page-from: #F8FAFC;
+  --gradient-page-to: #F1F5F9;
+  --shadow-card-hover: 0 12px 40px rgba(0, 153, 204, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -49,46 +112,55 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Light theme overrides */
-.theme-light body {
-  background-color: #F8FAFC;
-  color: #0A1628;
-}
-
-.theme-light .gradient-text {
-  background: linear-gradient(135deg, #0099CC, #00E68A);
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--gradient-text-from), var(--gradient-text-to));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Dark theme gradient-text (default) */
-.theme-dark .gradient-text {
-  background: linear-gradient(135deg, #00D4FF, #00E68A);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ── Gradient backgrounds ── */
+.gradient-hero {
+  background: linear-gradient(to bottom right, var(--gradient-hero-from), var(--gradient-hero-via), var(--gradient-hero-to));
+}
+.gradient-cta {
+  background: linear-gradient(to bottom right, var(--gradient-cta-from), var(--gradient-cta-to));
+}
+.gradient-page {
+  background: linear-gradient(to bottom, var(--gradient-page-from), var(--gradient-page-to));
 }
 
-/* Card hover effect */
+/* ── Glass header ── */
+.glass-header {
+  background-color: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ── Card hover ── */
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
+  box-shadow: var(--shadow-card-hover);
 }
 
-.theme-light .card-hover:hover {
-  box-shadow: 0 12px 40px rgba(0, 153, 204, 0.12);
+/* ── Footer (always dark) ── */
+.footer-text {
+  color: #B0B8C8;
+}
+.footer-text-muted {
+  color: #6B7A90;
+}
+.footer-heading {
+  color: #FFFFFF;
+}
+.footer-link:hover {
+  color: #00D4FF;
 }
 
-/* Light theme card overrides */
-.theme-light section {
-  transition: background-color 0.3s ease;
-}
-
-/* Scrollbar */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -100,42 +172,37 @@ body {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--cc-cyan-dark);
+  background: var(--accent-cyan-dark);
 }
 
-/* Slider animations */
+/* ── Animations ── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateX(20px); }
   to { opacity: 1; transform: translateX(0); }
 }
-
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Prose overrides for light theme */
-.theme-light .prose-invert {
-  --tw-prose-body: #475569;
-  --tw-prose-headings: #0A1628;
-  --tw-prose-links: #0099CC;
-}
-
-/* Chat bubble animation */
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .animate-slide-up {
   animation: slideUp 0.3s ease-out;
 }
 
-/* Chat pulse animation */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
-
 .animate-pulse-dot {
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Prose overrides for blog ── */
+.theme-light .prose-invert {
+  --tw-prose-body: #475569;
+  --tw-prose-headings: #0A1628;
+  --tw-prose-links: #0099CC;
 }

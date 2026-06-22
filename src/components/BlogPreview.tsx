@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { GhostPost } from "@/lib/ghost";
+import type { GhostPost } from "@/lib/ghost";
 
 export function BlogPreview({ posts }: { posts: GhostPost[] }) {
   return (
-    <section className="py-20 bg-[#0D1F3C]">
+    <section className="py-20 bg-surface-alt">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-content">
             Dernières <span className="gradient-text">publications</span>
           </h2>
-          <p className="text-[#B0B8C8] max-w-xl mx-auto">
+          <p className="text-content-secondary max-w-xl mx-auto">
             Analyses, guides et retours d'expérience pour anticiper les menaces cyber.
           </p>
         </div>
@@ -20,7 +20,7 @@ export function BlogPreview({ posts }: { posts: GhostPost[] }) {
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="card-hover group block rounded-2xl overflow-hidden bg-white/5 border border-white/10"
+                className="card-hover group block rounded-2xl overflow-hidden bg-surface-card border border-edge"
               >
                 {post.feature_image && (
                   <div className="aspect-video overflow-hidden">
@@ -33,17 +33,17 @@ export function BlogPreview({ posts }: { posts: GhostPost[] }) {
                 )}
                 <div className="p-6">
                   {post.primary_tag && (
-                    <span className="text-xs font-semibold text-[#00D4FF] uppercase tracking-wider">
+                    <span className="text-xs font-semibold text-accent uppercase tracking-wider">
                       {post.primary_tag.name}
                     </span>
                   )}
-                  <h3 className="text-lg font-bold mt-2 mb-3 group-hover:text-[#00D4FF] transition-colors line-clamp-2">
+                  <h3 className="text-lg font-bold mt-2 mb-3 group-hover:text-accent transition-colors line-clamp-2 text-content">
                     {post.title}
                   </h3>
-                  <p className="text-sm text-[#B0B8C8] line-clamp-3">
+                  <p className="text-sm text-content-secondary line-clamp-3">
                     {post.excerpt || ""}
                   </p>
-                  <span className="inline-block mt-4 text-sm font-medium text-[#00D4FF] group-hover:translate-x-1 transition-transform">
+                  <span className="inline-block mt-4 text-sm font-medium text-accent group-hover:translate-x-1 transition-transform">
                     Lire l&apos;article →
                   </span>
                 </div>
@@ -51,7 +51,7 @@ export function BlogPreview({ posts }: { posts: GhostPost[] }) {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-[#6B7A90]">
+          <div className="text-center py-12 text-content-muted">
             <p className="text-lg">Les articles arrivent bientôt…</p>
             <p className="text-sm mt-2">Notre blog Ghost CMS sera connecté prochainement.</p>
           </div>

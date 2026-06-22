@@ -18,15 +18,14 @@ export function useTheme() {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme") as Theme | null;
     const initial = stored || "dark";
     setTheme(initial);
+    // Inline script in <head> already sets the class, but sync here for safety
     document.documentElement.classList.toggle("theme-light", initial === "light");
     document.documentElement.classList.toggle("theme-dark", initial === "dark");
-    setMounted(true);
   }, []);
 
   const toggleTheme = () => {
@@ -37,11 +36,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.classList.toggle("theme-dark", next === "dark");
   };
 
-  // Prevent flash: hide content until theme is resolved
-  if (!mounted) {
-    return <div style={{ visibility: "hidden" }}>{children}</div>;
-  }
-
+  // No visibility:hidden wrapper — the inline script in <head> sets the
+  // correct theme class before React hydrates, preventing flash of wrong theme.
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}

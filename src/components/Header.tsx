@@ -2,9 +2,17 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "./ThemeProvider";
 
-const solutions = [
+interface SolutionLink {
+  title: string;
+  href: string;
+  icon: string;
+  desc: string;
+}
+
+const solutions: SolutionLink[] = [
   {
     title: "RSSI Stratégique",
     href: "/solutions/rssi-strategique",
@@ -38,8 +46,15 @@ export function Header() {
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === "light";
+  const pathname = usePathname();
 
-  // Close mobile menu on route change (via scroll / click outside)
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+    setSolutionsOpen(false);
+  }, [pathname]);
+
+  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -61,21 +76,16 @@ export function Header() {
 
   const navLinkClass = `transition-colors ${
     isLight
-      ? "text-gray-600 hover:text-[#0A1628]"
-      : "text-[#B0B8C8] hover:text-white"
+      ? "text-gray-600 hover:text-content"
+      : "text-content-secondary hover:text-content"
   }`;
 
-  const borderClass = isLight ? "border-gray-200" : "border-white/10";
-  const bgGlass = isLight
-    ? "bg-white/90 backdrop-blur-lg border-b border-gray-200"
-    : "bg-[#0A1628]/90 backdrop-blur-lg border-b border-white/10";
-
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 ${bgGlass}`}>
+    <header className="fixed top-0 left-0 right-0 z-40 glass-header backdrop-blur-lg">
       <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl font-bold tracking-tight">
-            <span className={isLight ? "text-[#0A1628]" : "text-white"}>CC</span>
+            <span className="text-content">CC</span>
             <span className="gradient-text">DIGITAL</span>
           </span>
         </Link>
@@ -89,7 +99,7 @@ export function Header() {
             onMouseLeave={handleMouseLeave}
           >
             <button
-              className={`${navLinkClass} flex items-center gap-1 ${solutionsOpen ? (isLight ? "text-[#0A1628]" : "text-white") : ""}`}
+              className={`${navLinkClass} flex items-center gap-1 ${solutionsOpen ? "text-content" : ""}`}
               onClick={() => setSolutionsOpen(!solutionsOpen)}
               aria-expanded={solutionsOpen}
               aria-haspopup="true"
@@ -100,10 +110,10 @@ export function Header() {
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-80 rounded-xl shadow-2xl shadow-black/40 p-2 animate-fade-in ${
                 isLight
                   ? "bg-white border border-gray-200 shadow-lg"
-                  : "bg-[#1A2744] border border-white/10"
+                  : "bg-surface-raised border border-edge"
               }`}>
                 <div className={`absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 ${
-                  isLight ? "bg-white border-l border-t border-gray-200" : "bg-[#1A2744] border-l border-t border-white/10"
+                  isLight ? "bg-white border-l border-t border-gray-200" : "bg-surface-raised border-l border-t border-edge"
                 }`} />
                 {solutions.map((s) => (
                   <Link
@@ -116,14 +126,10 @@ export function Header() {
                   >
                     <span className="text-2xl mt-0.5">{s.icon}</span>
                     <div>
-                      <span className={`font-medium block group-hover:text-[#00D4FF] transition-colors ${
-                        isLight ? "text-[#0A1628]" : "text-white"
-                      }`}>
+                      <span className={`font-medium block group-hover:text-accent transition-colors text-content`}>
                         {s.title}
                       </span>
-                      <span className={`block text-xs mt-0.5 ${
-                        isLight ? "text-gray-500" : "text-[#6B7A90]"
-                      }`}>
+                      <span className={`block text-xs mt-0.5 text-content-muted`}>
                         {s.desc}
                       </span>
                     </div>
@@ -142,8 +148,8 @@ export function Header() {
             onClick={toggleTheme}
             className={`p-2 rounded-lg transition-all ${
               isLight
-                ? "border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-[#0A1628]"
-                : "border border-white/10 text-[#B0B8C8] hover:bg-white/5 hover:text-white"
+                ? "border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-content"
+                : "border border-edge text-content-secondary hover:bg-white/5 hover:text-content"
             }`}
             aria-label={isLight ? "Passer en mode sombre" : "Passer en mode clair"}
             title={isLight ? "Mode sombre" : "Mode clair"}
@@ -160,7 +166,7 @@ export function Header() {
           </button>
           <Link
             href="/contact"
-            className="px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628] hover:shadow-lg hover:shadow-[#00D4FF]/25 transition-all"
+            className="px-5 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-accent to-accent-dark text-[#0A1628] hover:shadow-lg hover:shadow-accent/25 transition-all"
           >
             Consultation
           </Link>
@@ -168,8 +174,8 @@ export function Header() {
             href="/login"
             className={`px-5 py-2 text-sm font-semibold rounded-lg transition-all ${
               isLight
-                ? "border border-gray-300 text-[#0A1628] hover:bg-gray-50"
-                : "border border-white/20 text-white hover:bg-white/5"
+                ? "border border-gray-300 text-content hover:bg-gray-50"
+                : "border border-white/20 text-content hover:bg-white/5"
             }`}
           >
             Se connecter
@@ -183,7 +189,7 @@ export function Header() {
             className={`p-2 rounded-lg transition-all ${
               isLight
                 ? "border border-gray-300 text-gray-600"
-                : "border border-white/10 text-white"
+                : "border border-edge text-content"
             }`}
             aria-label={isLight ? "Mode sombre" : "Mode clair"}
           >
@@ -198,7 +204,7 @@ export function Header() {
             )}
           </button>
           <button
-            className={`${isLight ? "text-[#0A1628]" : "text-white"} p-2`}
+            className={`text-content p-2`}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menu"
           >
@@ -216,7 +222,7 @@ export function Header() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className={`md:hidden border-t px-6 py-4 space-y-1 animate-fade-in ${
-          isLight ? "bg-white border-gray-200" : "bg-[#0A1628] border-white/10"
+          isLight ? "bg-white border-gray-200" : "bg-surface border-edge"
         }`}>
           <button
             className={`flex items-center justify-between w-full py-2 ${navLinkClass}`}
@@ -243,10 +249,10 @@ export function Header() {
           <Link href="/blog" className={`block py-2 ${navLinkClass}`} onClick={() => setMenuOpen(false)}>Ressources</Link>
           <Link href="/about" className={`block py-2 ${navLinkClass}`} onClick={() => setMenuOpen(false)}>Qui sommes-nous ?</Link>
           <Link href="/contact" className={`block py-2 ${navLinkClass}`} onClick={() => setMenuOpen(false)}>Contact</Link>
-          <hr className={isLight ? "border-gray-200" : "border-white/10"} />
+          <hr className={isLight ? "border-gray-200" : "border-edge"} />
           <Link
             href="/contact"
-            className="block px-5 py-2 text-center font-semibold rounded-lg bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-[#0A1628]"
+            className="block px-5 py-2 text-center font-semibold rounded-lg bg-gradient-to-r from-accent to-accent-dark text-[#0A1628]"
             onClick={() => setMenuOpen(false)}
           >
             Consultation
@@ -254,7 +260,7 @@ export function Header() {
           <Link
             href="/login"
             className={`block px-5 py-2 text-center font-semibold rounded-lg ${
-              isLight ? "border border-gray-300 text-[#0A1628]" : "border border-white/20 text-white"
+              isLight ? "border border-gray-300 text-content" : "border border-white/20 text-content"
             }`}
             onClick={() => setMenuOpen(false)}
           >
