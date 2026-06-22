@@ -15,7 +15,7 @@ export function BlogPreview({ posts: initialPosts }: BlogPreviewProps) {
   useEffect(() => {
     if (initialPosts.length > 0) return;
 
-    const ghostUrl = process.env.NEXT_PUBLIC_GHOST_URL || "https://la-cyber-en-clair.ccdigital.fr";
+    const ghostUrl = process.env.NEXT_PUBLIC_GHOST_URL || process.env.NEXT_PUBLIC_GHOST_API_URL || "https://la-cyber-en-clair.ccdigital.fr";
     const ghostKey = process.env.NEXT_PUBLIC_GHOST_CONTENT_API_KEY || "";
 
     if (!ghostKey) {
